@@ -1,6 +1,10 @@
 package ituvtu.server.database;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
+import java.util.Properties;
 
 public class DatabaseConnection {
     private static Connection connection = null;
@@ -24,26 +28,21 @@ public class DatabaseConnection {
 
     private static Connection createNewConnection() {
         try {
-//            InputStream is = DatabaseConnection.class.getClassLoader().getResourceAsStream("db.properties");
-//            Properties props = new Properties();
-//            if (is != null) {
-//                props.load(is);
-//            } else {
-//                throw new RuntimeException("Database properties file not found");
-//            }
-//
-//            String url = props.getProperty("db.url") + "?autoReconnect=true";
-//            String user = props.getProperty("db.user");
-//            String password = props.getProperty("db.password");
-//            return DriverManager.getConnection(url, user, password);
-            return DriverManager.getConnection("jdbc:mysql://localhost:3306/messenger", "root", "3698");
+            InputStream is = new FileInputStream("src/main/resources/ituvtu/server/config.properties");
+            Properties props = new Properties();
+            props.load(is);
+
+            String url = props.getProperty("db.url") + "?autoReconnect=true";
+            String user = props.getProperty("db.user");
+            String password = props.getProperty("db.password");
+            return DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
             System.err.println("Database connection failed: " + e.getMessage());
             return null;
         }
-//        catch (IOException e) {
-//            throw new RuntimeException("Failed to load database properties: " + e);
-//        }
+        catch (IOException e) {
+            throw new RuntimeException("Failed to load database properties: " + e);
+        }
     }
 
     private static boolean isValid(Connection conn) {
