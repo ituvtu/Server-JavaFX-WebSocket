@@ -172,8 +172,9 @@ public class Server extends WebSocketServer implements IServer {
 
     @Override
     public void processChatDeletionRequest(WebSocket conn, ChatRequest chatRequest) {
-        boolean success = dbManager.deleteChat(chatRequest.getChatId());
-        if (success) {
+        boolean successDeletingChat = dbManager.deleteChat(chatRequest.getChatId());
+        boolean successDeletingMessages = dbManager.deleteMessagesByChatId(chatRequest.getChatId());
+        if (successDeletingChat && successDeletingMessages) {
             conn.send("Chat deleted successfully.");
         } else {
             conn.send("Failed to delete chat.");

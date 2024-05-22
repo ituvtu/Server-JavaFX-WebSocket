@@ -276,5 +276,17 @@ public class DatabaseManager {
         }
         return false;
     }
+    public boolean deleteMessagesByChatId(int chatId) {
+        String sql = "DELETE FROM chat_messages WHERE chat_id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, chatId);
+            int affectedRows = stmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            System.err.println("Database error during message deletion: " + e.getMessage());
+            return false;
+        }
+    }
 }
 
