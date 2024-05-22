@@ -69,7 +69,6 @@ public class ServerController implements IServerObserver {
         logScrollPane.getStylesheets().add(stylesheet);
         chatListView.getStylesheets().add(stylesheet);
         messageScrollPane.getStylesheets().add(stylesheet);
-
         chatListView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 currentChatId = newSelection.chatId();

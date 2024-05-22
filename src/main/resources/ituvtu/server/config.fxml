@@ -8,24 +8,24 @@
 <?import javafx.scene.layout.GridPane?>
 
 <GridPane fx:controller="ituvtu.server.controller.ConfigController"
-          alignment="center" hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml/1">
+          alignment="center" hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml/1" prefWidth="450">
     <padding>
         <Insets top="25" right="25" bottom="25" left="25"/>
     </padding>
 
     <Label text="Server Configuration" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2"/>
 
-    <Label text="Port:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-    <TextField fx:id="portField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <Label text="Port:" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="LEFT"/>
+    <TextField fx:id="portField" promptText="Port" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS"/>
 
-    <Label text="Database URL:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-    <TextField fx:id="dbUrlField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+    <Label text="Database URL:" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.halignment="LEFT"/>
+    <TextField fx:id="dbUrlField" promptText="URL" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.hgrow="ALWAYS"/>
 
-    <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-    <TextField fx:id="usernameField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+    <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.halignment="LEFT"/>
+    <TextField fx:id="usernameField" promptText="Username" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.hgrow="ALWAYS"/>
 
-    <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-    <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+    <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.halignment="LEFT"/>
+    <PasswordField fx:id="passwordField" promptText="Password" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.hgrow="ALWAYS"/>
 
-    <Button text="Save" onAction="#handleSave" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.halignment="RIGHT"/>
+    <Button text="Save" onAction="#handleSave" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS"/>
 </GridPane>
