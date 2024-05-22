@@ -24,4 +24,3 @@ public class MessagesResponse {
         this.messages = messages;
     }
 }
-

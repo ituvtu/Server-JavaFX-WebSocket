@@ -74,4 +74,3 @@ public class ChatRequest {
         this.parameters = parameters;
     }
 }
-

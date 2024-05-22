@@ -67,4 +67,3 @@ public class Message {
         this.chatId = chatId;
     }
 }
-

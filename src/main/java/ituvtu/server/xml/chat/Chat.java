@@ -8,7 +8,6 @@ public class Chat {
     private String usernameFirst;
     private String usernameSecond;
 
-    @SuppressWarnings("unused")
     public Chat() {
         // JAXB requires a constructor with no arguments
     }
@@ -65,4 +64,3 @@ public class Chat {
         return "Chat between " + usernameFirst + " and " + usernameSecond;
     }
 }
-

@@ -31,4 +31,3 @@ public class AuthResponse {
         this.username = username;
     }
 }
-

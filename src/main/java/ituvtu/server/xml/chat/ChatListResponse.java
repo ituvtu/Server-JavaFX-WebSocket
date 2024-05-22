@@ -8,7 +8,6 @@ import java.util.List;
 public class ChatListResponse {
     private List<Chat> chats;
 
-    @SuppressWarnings("unused")
     public ChatListResponse() {
         // JAXB requires a constructor with no arguments
     }
