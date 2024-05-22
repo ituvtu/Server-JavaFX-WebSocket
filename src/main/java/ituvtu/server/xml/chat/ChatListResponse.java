@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.*;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 @XmlRootElement
 public class ChatListResponse {
     private List<Chat> chats;

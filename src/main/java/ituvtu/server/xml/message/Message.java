@@ -6,6 +6,7 @@ import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import java.time.LocalDateTime;
 
+@SuppressWarnings("unused")
 @XmlRootElement
 public class Message {
     private String from;

@@ -2,6 +2,7 @@ package ituvtu.server.xml.chat;
 
 import jakarta.xml.bind.annotation.*;
 
+@SuppressWarnings("unused")
 @XmlRootElement
 public class Chat {
     private int chat_id;

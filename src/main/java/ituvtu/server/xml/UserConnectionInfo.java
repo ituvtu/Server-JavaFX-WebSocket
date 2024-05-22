@@ -1,8 +1,8 @@
 package ituvtu.server.xml;
 
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.*;
 
+@SuppressWarnings("unused")
 @XmlRootElement
 public class UserConnectionInfo {
     private String username;
@@ -16,7 +16,6 @@ public class UserConnectionInfo {
         this.port = port;
     }
 
-    @XmlElement
     public String getUsername() {
         return username;
     }
@@ -25,7 +24,6 @@ public class UserConnectionInfo {
         this.username = username;
     }
 
-    @XmlElement
     public int getPort() {
         return port;
     }
@@ -34,5 +32,3 @@ public class UserConnectionInfo {
         this.port = port;
     }
 }
-
-

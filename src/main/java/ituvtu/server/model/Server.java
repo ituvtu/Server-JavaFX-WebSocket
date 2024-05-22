@@ -14,6 +14,7 @@ import java.net.InetSocketAddress;
 import java.util.*;
 
 
+@SuppressWarnings({"unused", "CallToPrintStackTrace"})
 public class Server extends WebSocketServer implements IServer {
     private static Server instance;
     final Set<WebSocket> connections;

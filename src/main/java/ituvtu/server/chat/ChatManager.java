@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 public class ChatManager {
     private final DatabaseManager dbManager;
 

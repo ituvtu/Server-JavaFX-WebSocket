@@ -6,6 +6,7 @@ import ituvtu.server.xml.chat.ChatRequest;
 import ituvtu.server.xml.message.Message;
 import org.java_websocket.WebSocket;
 
+@SuppressWarnings("unused")
 public interface IServer {
    void addObserver(IServerObserver observer);
    void processGetMessagesRequest(WebSocket conn, ChatRequest chatRequest);

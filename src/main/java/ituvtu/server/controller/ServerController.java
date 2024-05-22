@@ -2,6 +2,7 @@ package ituvtu.server.controller;
 
 import ituvtu.server.chat.ChatDisplayData;
 import ituvtu.server.database.DatabaseManager;
+import ituvtu.server.util.UIFactory;
 import ituvtu.server.xml.auth.*;
 import ituvtu.server.xml.chat.ChatRequest;
 import ituvtu.server.xml.message.Message;
@@ -10,26 +11,24 @@ import ituvtu.server.xml.message.MessagesResponse;
 import jakarta.xml.bind.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.text.*;
 import javafx.util.Callback;
 import org.java_websocket.WebSocket;
 import ituvtu.server.model.*;
 import java.io.*;
 import java.time.*;
-import java.time.format.*;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
+@SuppressWarnings({"unused", "CallToPrintStackTrace"})
 public class ServerController implements IServerObserver {
     private static ServerController instance;
 
-    public ListView<ChatDisplayData> chatListView;
     @FXML
-    public VBox messagesArea;
+    private ListView<ChatDisplayData> chatListView;
+    @FXML
+    private VBox messagesArea;
     @FXML
     private ScrollPane messageScrollPane;
     @FXML
@@ -66,12 +65,10 @@ public class ServerController implements IServerObserver {
             }
         });
 
-        logScrollPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/ituvtu/server/server-styles.css")).toExternalForm());
-        logScrollPane.getStyleClass().add("vbox-with-border");
-        chatListView.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/ituvtu/server/server-styles.css")).toExternalForm());
-        chatListView.getStyleClass().add("vbox-with-border");
-        messageScrollPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/ituvtu/server/server-styles.css")).toExternalForm());
-        messageScrollPane.getStyleClass().add("vbox-with-border");
+        String stylesheet = Objects.requireNonNull(getClass().getResource("/ituvtu/server/server-styles.css")).toExternalForm();
+        logScrollPane.getStylesheets().add(stylesheet);
+        chatListView.getStylesheets().add(stylesheet);
+        messageScrollPane.getStylesheets().add(stylesheet);
 
         chatListView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
@@ -135,83 +132,16 @@ public class ServerController implements IServerObserver {
     private void addDateLabelIfNecessary(LocalDate messageDate) {
         if (currentDisplayedDate == null || !currentDisplayedDate.equals(messageDate)) {
             currentDisplayedDate = messageDate;
-            String formattedDate = formatDate(messageDate);
-            Label dateLabel = createDateLabel(formattedDate);
-            HBox dateBox = createDateBox(dateLabel);
+            String formattedDate = UIFactory.formatDate(messageDate);
+            Label dateLabel = UIFactory.createDateLabel(formattedDate);
+            HBox dateBox = UIFactory.createDateBox(dateLabel);
             messagesArea.getChildren().add(dateBox);
         }
     }
 
     private void addMessageBox(Message message, LocalDateTime timestamp) {
-        VBox messageBox = new VBox();
-        Label senderLabel = new Label(message.getFrom());
-        senderLabel.getStyleClass().add("sender-label");
-
-        // Create a text node for a message
-        Text messageText = new Text(message.getContent());
-        messageText.setWrappingWidth(300);  // Maximum text width
-        messageText.getStyleClass().add("message-text");
-
-        // Creating a TextFlow for a message
-        TextFlow messageFlow = new TextFlow(messageText);
-        messageFlow.setMaxWidth(300);
-        messageFlow.getStyleClass().add("message-text-flow");
-
-        Label timeLabel = new Label(timestamp.format(DateTimeFormatter.ofPattern("HH:mm")));
-        timeLabel.getStyleClass().add("time-label");
-
-        // Message container
-        HBox messageContainer = new HBox();
-        messageContainer.setMaxWidth(300);
-
-        StackPane textContainer = new StackPane(messageFlow);
-        textContainer.setMaxWidth(300);
-
-        messageContainer.getChildren().add(textContainer);
-
-        if (message.getFrom().equals(usernameFirst)) {
-            messageBox.setAlignment(Pos.CENTER_LEFT);
-            messageContainer.setAlignment(Pos.CENTER_LEFT);
-            textContainer.getStyleClass().add("text-container-left");
-        } else {
-            messageBox.setAlignment(Pos.CENTER_RIGHT);
-            messageContainer.setAlignment(Pos.CENTER_RIGHT);
-            textContainer.getStyleClass().add("text-container-right");
-        }
-
-        messageBox.getChildren().addAll(senderLabel, messageContainer, timeLabel);
+        VBox messageBox = UIFactory.createMessageBox(message, timestamp, usernameFirst);
         messagesArea.getChildren().add(messageBox);
-    }
-
-    private void addGeneralBox(VBox messageBox, boolean isLeft) {
-        HBox generalBox = new HBox();
-        if (isLeft) {
-            generalBox.setAlignment(Pos.CENTER_LEFT);
-        } else {
-            generalBox.setAlignment(Pos.CENTER_RIGHT);
-        }
-        generalBox.getChildren().add(messageBox);
-        messagesArea.getChildren().add(generalBox);
-    }
-
-    private Label createDateLabel(String formattedDate) {
-        Label dateLabel = new Label(formattedDate);
-        dateLabel.setAlignment(Pos.CENTER);
-        dateLabel.getStyleClass().add("date-label");
-        return dateLabel;
-    }
-
-    private HBox createDateBox(Label dateLabel) {
-        HBox dateBox = new HBox();
-        dateBox.setAlignment(Pos.CENTER);
-        dateBox.getChildren().add(dateLabel);
-        return dateBox;
-    }
-
-    private String formatDate(LocalDate date) {
-        String day = String.valueOf(date.getDayOfMonth());
-        String month = date.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault());
-        return day + " - " + month;
     }
 
     public static synchronized ServerController getInstance(IServer server) {
@@ -266,18 +196,18 @@ public class ServerController implements IServerObserver {
             StringReader reader = new StringReader(input);
             AuthRequest authRequest = (AuthRequest) unmarshaller.unmarshal(reader);
             boolean authenticated = DatabaseManager.checkOrCreateUser(authRequest.getUsername(), authRequest.getPassword());
+            System.out.println(authenticated);
             AuthResponse authResponse = new AuthResponse(authenticated, authRequest.getUsername());
             String authResponseXml = XMLUtil.toXML(authResponse);
+            System.out.println(authResponseXml);
             conn.send(authResponseXml);
         } catch (JAXBException e) {
             e.printStackTrace();
         }
     }
 
-
     private void handleChatRequest(WebSocket conn, String input) throws JAXBException {
         ChatRequest chatRequest = XMLUtil.fromXML(input, ChatRequest.class);
-
         switch (chatRequest.getAction()) {
             case "createChat":
                 processChatCreationRequest(conn, chatRequest);

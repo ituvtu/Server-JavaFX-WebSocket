@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
+@SuppressWarnings("CallToPrintStackTrace")
 public class ConfigController {
 
     @FXML

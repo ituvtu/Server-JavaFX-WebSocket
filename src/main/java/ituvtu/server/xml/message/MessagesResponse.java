@@ -3,6 +3,7 @@ package ituvtu.server.xml.message;
 import jakarta.xml.bind.annotation.*;
 import java.util.List;
 
+@SuppressWarnings("unused")
 @XmlRootElement
 public class MessagesResponse {
     private List<Message> messages;

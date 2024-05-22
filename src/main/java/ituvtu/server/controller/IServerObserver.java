@@ -7,6 +7,7 @@ import org.java_websocket.WebSocket;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public interface IServerObserver {
     void onMessage(WebSocket conn, String input) throws JAXBException;
     void updateChatList(List<ChatDisplayData> chats);

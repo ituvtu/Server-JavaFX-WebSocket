@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.*;
 
 import java.util.Map;
 
+@SuppressWarnings("unused")
 @XmlRootElement
 public class ChatRequest {
     private String action;

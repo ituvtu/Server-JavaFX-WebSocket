@@ -1,6 +1,7 @@
 package ituvtu.server.xml.auth;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
+@SuppressWarnings("unused")
 @XmlRootElement
 public class AuthRequest {
     private String username;
@@ -18,6 +19,7 @@ public class AuthRequest {
         return username;
     }
 
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -25,6 +27,7 @@ public class AuthRequest {
     public String getPassword() {
         return password;
     }
+
 
     public void setPassword(String password) {
         this.password = password;
