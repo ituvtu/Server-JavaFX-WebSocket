@@ -1,4 +1,3 @@
-// IServer.java
 package ituvtu.server.model;
 
 import ituvtu.server.controller.IServerObserver;
@@ -30,4 +29,10 @@ public interface IServer {
     void clearObservers();
 
    Set<IServerObserver> getObservers();
+
+   void startserver();
+
+
+
+   void stopserver() throws InterruptedException;
 }

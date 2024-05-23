@@ -16,11 +16,10 @@ import java.util.*;
 
 @SuppressWarnings({"unused", "CallToPrintStackTrace"})
 public class Server extends WebSocketServer implements IServer {
-    private static Server instance;
+    private static IServer instance;
     final Set<WebSocket> connections;
     final Set<IServerObserver> observers;
     final DatabaseManager dbManager;
-
 
     public Server(int port) {
         super(new InetSocketAddress(port));
@@ -29,7 +28,7 @@ public class Server extends WebSocketServer implements IServer {
         dbManager = DatabaseManager.getInstance();
     }
 
-    public static synchronized Server getInstance(int port){
+    public static synchronized IServer getInstance(int port) {
         if (instance == null) {
             instance = new Server(port);
         }
@@ -104,7 +103,7 @@ public class Server extends WebSocketServer implements IServer {
 
     public void notifyObserversWithMessage(Message message) {
         observers.forEach(observer -> {
-            if (observer instanceof ServerController controller) {
+            if (observer instanceof IServerController controller) {
                 if (controller.isCurrentChat(message.getChatId())) {
                     controller.displayMessage(message);
                 }
@@ -257,5 +256,12 @@ public class Server extends WebSocketServer implements IServer {
 
     public Set<IServerObserver> getObservers() {
         return observers;
+    }
+
+    public void stopserver() throws InterruptedException {
+        this.stop();
+    }
+    public void startserver() {
+        this.start();
     }
 }

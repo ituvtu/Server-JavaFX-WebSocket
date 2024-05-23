@@ -1,26 +1,19 @@
 package ituvtu.server.view;
 
-import ituvtu.server.controller.ConfigController;
-import ituvtu.server.controller.IServerObserver;
-import javafx.application.Application;
-import javafx.application.Platform;
+import ituvtu.server.controller.*;
+import javafx.application.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import ituvtu.server.controller.IServerController;
-import ituvtu.server.controller.ServerController;
-import ituvtu.server.model.Server;
-
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.Objects;
-import java.util.Properties;
+import ituvtu.server.model.*;
+import java.io.*;
+import java.util.*;
 
 @SuppressWarnings("CallToPrintStackTrace")
 public class ServerApp extends Application {
     private static IServerController serverController;
-    private static Server server;
+    private static IServer server;
     private static Stage primaryStage;
 
 
@@ -35,7 +28,7 @@ public class ServerApp extends Application {
         }
         serverController.setServer(server);
         server.addObserver((IServerObserver) serverController);
-        server.start();
+        server.startserver();
     }
 
     public void showConfigScreen() throws Exception {
@@ -83,7 +76,7 @@ public class ServerApp extends Application {
     public void stop() {
         if (server != null) {
             try {
-                server.stop();
+                server.stopserver();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 System.err.println("Server failed to stop cleanly: " + e.getMessage());

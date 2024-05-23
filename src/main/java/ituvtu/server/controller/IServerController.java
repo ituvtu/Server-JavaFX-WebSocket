@@ -2,6 +2,7 @@ package ituvtu.server.controller;
 
 import ituvtu.server.chat.ChatDisplayData;
 import ituvtu.server.model.IServer;
+import ituvtu.server.xml.message.Message;
 import jakarta.xml.bind.JAXBException;
 import org.java_websocket.WebSocket;
 
@@ -18,4 +19,8 @@ public interface IServerController {
     void displayLogMessage(String text, String styleClass);
 
     void clearObservers();
+
+    boolean isCurrentChat(int chatId);
+
+    void displayMessage(Message message);
 }
