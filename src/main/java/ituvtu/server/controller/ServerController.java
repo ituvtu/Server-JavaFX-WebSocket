@@ -3,26 +3,32 @@ package ituvtu.server.controller;
 import ituvtu.server.chat.ChatDisplayData;
 import ituvtu.server.database.DatabaseManager;
 import ituvtu.server.util.UIFactory;
-import ituvtu.server.xml.auth.*;
+import ituvtu.server.xml.UserConnectionInfo;
+import ituvtu.server.xml.auth.AuthRequest;
+import ituvtu.server.xml.auth.AuthResponse;
 import ituvtu.server.xml.chat.ChatRequest;
 import ituvtu.server.xml.message.Message;
-import ituvtu.server.xml.*;
+import ituvtu.server.xml.XMLUtil;
 import ituvtu.server.xml.message.MessagesResponse;
-import jakarta.xml.bind.*;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.util.Callback;
 import org.java_websocket.WebSocket;
-import ituvtu.server.model.*;
-import java.io.*;
-import java.time.*;
+import ituvtu.server.model.IServer;
+
+import java.io.StringReader;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-@SuppressWarnings({"unused", "CallToPrintStackTrace"})
-public class ServerController implements IServerObserver {
+@SuppressWarnings({"CallToPrintStackTrace", "unused"})
+public class ServerController implements IServerObserver, IServerController {
     private static ServerController instance;
 
     @FXML
@@ -43,6 +49,14 @@ public class ServerController implements IServerObserver {
 
     private ServerController(IServer server) {
         this.server = server;
+    }
+
+    public ServerController() {}
+    public static synchronized ServerController getInstance(IServer server) {
+        if (instance == null) {
+            instance = new ServerController(server);
+        }
+        return instance;
     }
 
     @FXML
@@ -143,30 +157,13 @@ public class ServerController implements IServerObserver {
         messagesArea.getChildren().add(messageBox);
     }
 
-    public static synchronized ServerController getInstance(IServer server) {
-        if (instance == null) {
-            instance = new ServerController(server);
-        }
-        return instance;
-    }
-
-    public void addChatToList(ChatDisplayData chatInfo) {
-        Platform.runLater(() -> chatListView.getItems().add(chatInfo));
-    }
-
     public void setServer(IServer server) {
         this.server = server;
+        server.addObserver(this);
     }
 
     @Override
     public void updateChatList(List<ChatDisplayData> chats) {
-        Platform.runLater(() -> {
-            chatListView.getItems().clear();
-            chatListView.getItems().addAll(chats);
-        });
-    }
-
-    public void setChatList(List<ChatDisplayData> chats) {
         Platform.runLater(() -> {
             chatListView.getItems().clear();
             chatListView.getItems().addAll(chats);
@@ -281,5 +278,10 @@ public class ServerController implements IServerObserver {
             logLabel.getStyleClass().addAll("log-message", styleClass);
             logMessagesArea.getChildren().add(logLabel);
         });
+    }
+
+    @Override
+    public void clearObservers() {
+        server.clearObservers();
     }
 }

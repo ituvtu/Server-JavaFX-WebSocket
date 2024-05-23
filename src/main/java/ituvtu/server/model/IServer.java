@@ -4,6 +4,7 @@ package ituvtu.server.model;
 import ituvtu.server.controller.IServerObserver;
 import ituvtu.server.xml.chat.ChatRequest;
 import ituvtu.server.xml.message.Message;
+import java.util.Set;
 import org.java_websocket.WebSocket;
 
 @SuppressWarnings("unused")
@@ -25,4 +26,8 @@ public interface IServer {
    int getPortConn(WebSocket conn);
 
    void updateDatabase(String username, int portConn);
+
+    void clearObservers();
+
+   Set<IServerObserver> getObservers();
 }

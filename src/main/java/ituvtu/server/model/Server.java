@@ -21,6 +21,7 @@ public class Server extends WebSocketServer implements IServer {
     final Set<IServerObserver> observers;
     final DatabaseManager dbManager;
 
+
     public Server(int port) {
         super(new InetSocketAddress(port));
         connections = new HashSet<>();
@@ -247,5 +248,14 @@ public class Server extends WebSocketServer implements IServer {
 
     public void updateDatabase(String username, int port) {
         dbManager.updateConnectionInfo(username, port);
+    }
+
+    @Override
+    public void clearObservers() {
+        observers.clear();
+    }
+
+    public Set<IServerObserver> getObservers() {
+        return observers;
     }
 }
