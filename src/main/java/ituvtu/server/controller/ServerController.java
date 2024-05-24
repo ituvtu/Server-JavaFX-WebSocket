@@ -135,7 +135,6 @@ public class ServerController implements IServerObserver, IServerController {
             if (isCurrentChat(message.getChatId())) {
                 LocalDateTime timestamp = message.getTimestamp();
                 LocalDate messageDate = timestamp.toLocalDate();
-
                 addDateLabelIfNecessary(messageDate);
                 addMessageBox(message, timestamp);
             }

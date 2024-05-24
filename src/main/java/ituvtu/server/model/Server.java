@@ -198,22 +198,23 @@ public class Server extends WebSocketServer implements IServer {
 
     @Override
     public void processChatCreationRequest(WebSocket conn, ChatRequest chatRequest) {
-        if (dbManager.userExists(chatRequest.getUsername1()) && dbManager.userExists(chatRequest.getUsername2())) {
-            boolean chatExists = dbManager.chatExists(chatRequest.getUsername1(), chatRequest.getUsername2());
-            if (chatExists) {
-                conn.send("Chat already exists between " + chatRequest.getUsername1() + " and " + chatRequest.getUsername2() + ". Please find it in your chat list.");
-            } else {
-                boolean chatCreated = dbManager.createChat(chatRequest.getUsername1(), chatRequest.getUsername2());
-                if (chatCreated) {
-                    conn.send("Chat created successfully between " + chatRequest.getUsername1() + " and " + chatRequest.getUsername2());
+        if(!Objects.equals(chatRequest.getUsername1(), chatRequest.getUsername2())){
+            if (dbManager.userExists(chatRequest.getUsername1()) && dbManager.userExists(chatRequest.getUsername2())) {
+                boolean chatExists = dbManager.chatExists(chatRequest.getUsername1(), chatRequest.getUsername2());
+                if (chatExists) {
+                    conn.send("Chat already exists between " + chatRequest.getUsername1() + " and " + chatRequest.getUsername2() + ". Please find it in your chat list.");
                 } else {
-                    conn.send("Failed to create chat or chat already exists.");
+                    boolean chatCreated = dbManager.createChat(chatRequest.getUsername1(), chatRequest.getUsername2());
+                    if (chatCreated) {
+                        conn.send("Chat created successfully between " + chatRequest.getUsername1() + " and " + chatRequest.getUsername2());
+                    } else {
+                        conn.send("Failed to create chat or chat already exists.");
+                    }
                 }
-            }
-            updateChatList();
-        } else {
-            conn.send("Problems with usernames");
-        }
+                updateChatList();
+            } else {
+                conn.send("Problems with usernames");
+            }}
     }
 
     public boolean userExists(String username) {
