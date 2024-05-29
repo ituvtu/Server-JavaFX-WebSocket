@@ -24,12 +24,6 @@ jobs:
       - name: Build with Maven
         run: mvn clean package
 
-      - name: Upload JAR file
-        uses: actions/upload-artifact@v2
-        with:
-          name: my-java-app
-          path: target/*.jar
-
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -49,3 +43,10 @@ jobs:
           asset_name: my-java-app.jar
           asset_content_type: application/java-archive
 
+      - name: Upload EXE to release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: path/to/your/file.exe
+          asset_name: my-application.exe
+          asset_content_type: application/x-msdownload
