@@ -1,14 +1,19 @@
 package ituvtu.server.view;
 
-import ituvtu.server.controller.*;
-import javafx.application.*;
+import ituvtu.server.controller.ConfigController;
+import ituvtu.server.controller.IServerController;
+import ituvtu.server.controller.ServerController;
+import ituvtu.server.model.IServer;
+import ituvtu.server.controller.IServerObserver;
+import ituvtu.server.model.Server;
+import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import ituvtu.server.model.*;
-import java.io.*;
-import java.util.*;
+
+import java.util.Objects;
 
 @SuppressWarnings("CallToPrintStackTrace")
 public class ServerApp extends Application {
@@ -16,12 +21,9 @@ public class ServerApp extends Application {
     private static IServer server;
     private static Stage primaryStage;
 
-
-    public static void initializeServer() throws Exception {
-        InputStream is = new FileInputStream("src/main/resources/ituvtu/server/config.properties");
-        Properties props = new Properties();
-        props.load(is);
-        int port = Integer.parseInt(props.getProperty("srv.port"));
+    public static void initializeServer(String portStr) {
+        // Convert port string to integer
+        int port = Integer.parseInt(portStr);
         server = Server.getInstance(port);
         if (serverController == null) {
             serverController = new ServerController();
@@ -69,8 +71,6 @@ public class ServerApp extends Application {
         ServerApp.primaryStage = primaryStage;
         showConfigScreen();
     }
-
-
 
     @Override
     public void stop() {

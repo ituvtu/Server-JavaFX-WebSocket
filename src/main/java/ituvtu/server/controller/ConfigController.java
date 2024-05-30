@@ -1,16 +1,12 @@
 package ituvtu.server.controller;
 
+import ituvtu.server.database.DatabaseConnection;
 import ituvtu.server.view.ServerApp;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.util.Properties;
-
-@SuppressWarnings("CallToPrintStackTrace")
 public class ConfigController {
 
     @FXML
@@ -22,26 +18,29 @@ public class ConfigController {
     @FXML
     private PasswordField passwordField;
 
+    private String serverPort;
+    private String databaseUrl;
+    private String username;
+    private String password;
+
     @FXML
     public void handleSave() {
-        try (OutputStream output = new FileOutputStream("src/main/resources/ituvtu/server/config.properties")) {
-            Properties prop = new Properties();
-
-            // set the properties value
-            prop.setProperty("srv.port", portField.getText());
-            prop.setProperty("db.url", dbUrlField.getText());
-            prop.setProperty("db.user", usernameField.getText());
-            prop.setProperty("db.password", passwordField.getText());
-
-            // save properties to project root folder
-            prop.store(output, null);
+        try {
+            // Set the variables with values from the text fields
+            serverPort = portField.getText();
+            databaseUrl = dbUrlField.getText();
+            username = usernameField.getText();
+            password = passwordField.getText();
 
             // Close the configuration window
             Stage stage = (Stage) portField.getScene().getWindow();
             stage.close();
 
+            // Initialize the database connection
+            DatabaseConnection.initialize(databaseUrl, username, password);
+
             // Proceed to start the server
-            ServerApp.initializeServer();
+            ServerApp.initializeServer(serverPort);
             ServerApp.showMainScreen();
         } catch (Exception e) {
             e.printStackTrace();

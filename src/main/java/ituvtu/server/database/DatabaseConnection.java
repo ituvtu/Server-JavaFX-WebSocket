@@ -1,16 +1,23 @@
 package ituvtu.server.database;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.*;
-import java.util.Properties;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class DatabaseConnection {
     private static Connection connection = null;
     private static DatabaseConnection instance;
+    private static String dbUrl;
+    private static String dbUser;
+    private static String dbPassword;
 
     private DatabaseConnection() { }
+
+    public static void initialize(String url, String user, String password) {
+        dbUrl = url + "?autoReconnect=true";
+        dbUser = user;
+        dbPassword = password;
+    }
 
     public static synchronized DatabaseConnection getInstance() {
         if (instance == null) {
@@ -28,20 +35,10 @@ public class DatabaseConnection {
 
     private static Connection createNewConnection() {
         try {
-            InputStream is = new FileInputStream("src/main/resources/ituvtu/server/config.properties");
-            Properties props = new Properties();
-            props.load(is);
-
-            String url = props.getProperty("db.url") + "?autoReconnect=true";
-            String user = props.getProperty("db.user");
-            String password = props.getProperty("db.password");
-            return DriverManager.getConnection(url, user, password);
+            return DriverManager.getConnection(dbUrl, dbUser, dbPassword);
         } catch (SQLException e) {
             System.err.println("Database connection failed: " + e.getMessage());
             return null;
-        }
-        catch (IOException e) {
-            throw new RuntimeException("Failed to load database properties: " + e);
         }
     }
 
@@ -53,4 +50,3 @@ public class DatabaseConnection {
         }
     }
 }
-

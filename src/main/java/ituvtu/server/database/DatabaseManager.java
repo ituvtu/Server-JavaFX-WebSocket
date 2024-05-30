@@ -276,6 +276,7 @@ public class DatabaseManager {
         }
         return false;
     }
+
     public boolean deleteMessagesByChatId(int chatId) {
         String sql = "DELETE FROM chat_messages WHERE chat_id = ?";
         try (Connection conn = getConnection();
@@ -289,4 +290,3 @@ public class DatabaseManager {
         }
     }
 }
-
