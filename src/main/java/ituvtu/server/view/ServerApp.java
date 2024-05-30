@@ -11,6 +11,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 import java.util.Objects;
@@ -22,15 +23,20 @@ public class ServerApp extends Application {
     private static Stage primaryStage;
 
     public static void initializeServer(String portStr) {
-        // Convert port string to integer
-        int port = Integer.parseInt(portStr);
-        server = Server.getInstance(port);
-        if (serverController == null) {
-            serverController = new ServerController();
+        try {
+            int port = Integer.parseInt(portStr);
+            server = Server.getInstance(port);
+            if (serverController == null) {
+                serverController = new ServerController();
+            }
+            serverController.setServer(server);
+            server.addObserver((IServerObserver) serverController);
+            server.startserver();
+        } catch (NumberFormatException e) {
+            showAlert("Initialization Error", "Port must be a valid number.");
+        } catch (Exception e) {
+            showAlert("Initialization Error", "An error occurred while starting the server: " + e.getMessage());
         }
-        serverController.setServer(server);
-        server.addObserver((IServerObserver) serverController);
-        server.startserver();
     }
 
     public void showConfigScreen() throws Exception {
@@ -62,6 +68,7 @@ public class ServerApp extends Application {
                 primaryStage.show();
             } catch (Exception e) {
                 e.printStackTrace();
+                showAlert("Error", "An error occurred while showing the main screen: " + e.getMessage());
             }
         });
     }
@@ -86,5 +93,15 @@ public class ServerApp extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    private static void showAlert(String title, String message) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(message);
+            alert.showAndWait();
+        });
     }
 }

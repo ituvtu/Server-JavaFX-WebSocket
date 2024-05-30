@@ -43,8 +43,10 @@ public class Server extends WebSocketServer implements IServer {
     public void onStart() {
         String logMessage = "Server started successfully on port: " + getPort();
         System.out.println(logMessage);
-        notifyObserversWithLog(logMessage, "log-message-color-success");
+
+
         updateChatList();
+        notifyObserversWithLog(logMessage, "log-message-color-success");
     }
 
     @Override

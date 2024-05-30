@@ -3,6 +3,7 @@ package ituvtu.server.database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class DatabaseConnection {
     private static Connection connection = null;
@@ -12,12 +13,6 @@ public class DatabaseConnection {
     private static String dbPassword;
 
     private DatabaseConnection() { }
-
-    public static void initialize(String url, String user, String password) {
-        dbUrl = url + "?autoReconnect=true";
-        dbUser = user;
-        dbPassword = password;
-    }
 
     public static synchronized DatabaseConnection getInstance() {
         if (instance == null) {
@@ -33,9 +28,21 @@ public class DatabaseConnection {
         return connection;
     }
 
+    public static boolean initialize(String url, String user, String password) {
+        dbUrl = url;
+        dbUser = user;
+        dbPassword = password;
+        connection = createNewConnection();
+        return connection != null;
+    }
+
     private static Connection createNewConnection() {
         try {
-            return DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+            Properties props = new Properties();
+            props.setProperty("user", dbUser);
+            props.setProperty("password", dbPassword);
+
+            return DriverManager.getConnection(dbUrl, props);
         } catch (SQLException e) {
             System.err.println("Database connection failed: " + e.getMessage());
             return null;
