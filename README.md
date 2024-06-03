@@ -13,7 +13,7 @@ This repository contains the server-side implementation of a messaging applicati
 
 ### Configuration
 
-Before starting the server, a configuration page will appear where you can set the port and database credentials. These settings will be saved in the `config.properties` file.
+Before starting the server, a configuration page will appear where you can set the port and database credentials.
 
 ### Server Application Structure
 
